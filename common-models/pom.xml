@@ -11,7 +11,6 @@
     </parent>
 
     <artifactId>common-models</artifactId>
-    <packaging>jar</packaging>
 
     <dependencies>
         <!-- JSON -->
