@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RawTelemetry",
+  "type": "object",
+  "required": ["deviceId", "protocol", "metricType", "value", "timestamp"],
+  "properties": {
+    "deviceId": { "type": "string" },
+    "protocol": { "enum": ["MODBUS", "BACNET"] },
+    "metricType": { "enum": ["temperature", "powerUsage", "transactionCount"] },
+    "value": { "type": "number" },
+    "timestamp": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xsd:element name="telemetry">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="deviceId" type="xsd:string"/>
+                <xsd:element name="protocol" type="xsd:string"/>
+                <xsd:element name="metricType" type="xsd:string"/>
+                <xsd:element name="value" type="xsd:double"/>
+                <xsd:element name="timestamp" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
