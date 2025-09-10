@@ -72,5 +72,18 @@ public class RestExceptionHandler {
         ErrorResponse body = build(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected error", req.getRequestURI(), null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
+
+    @ExceptionHandler(SchemaValidationException.class)
+    public ResponseEntity<ErrorResponse> handleSchema(SchemaValidationException ex,
+                                                      HttpServletRequest req) {
+        ErrorResponse body = new ErrorResponse(
+                "Bad Request",
+                ex.getMessage(),
+                req.getRequestURI(),
+                java.time.Instant.now(),
+                null
+        );
+        return ResponseEntity.status(org.springframework.http.HttpStatus.BAD_REQUEST).body(body);
+    }
 }
 

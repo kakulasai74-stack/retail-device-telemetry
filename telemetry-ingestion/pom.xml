@@ -61,6 +61,13 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- JSON Schema validation (NetworkNT) -->
+        <dependency>
+            <groupId>com.networknt</groupId>
+            <artifactId>json-schema-validator</artifactId>
+            <version>1.0.83</version>
+        </dependency>
     </dependencies>
 
     <properties>
