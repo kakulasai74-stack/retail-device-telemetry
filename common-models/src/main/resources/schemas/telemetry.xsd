@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:simpleType name="ProtocolType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MODBUS"/>
+            <xs:enumeration value="BACNET"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="telemetry">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="deviceId" type="xs:string"/>
+                <xs:element name="protocol" type="ProtocolType"/>
+                <xs:element name="metricType" type="xs:string"/>
+                <xs:element name="value" type="xs:double"/>
+                <xs:element name="timestamp" type="xs:dateTime"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
