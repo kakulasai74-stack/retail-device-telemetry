@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.emf.ingestion.service.PersistService;
 
 @RestController
 @RequestMapping("/api/v1/telemetry")
@@ -15,24 +16,20 @@ public class TelemetryController {
 
     private final ValidationService validation;
     private final TransformService transform;
+    private final PersistService persist;
 
-    public TelemetryController(ValidationService validation, TransformService transform) {
+    public TelemetryController(ValidationService validation, TransformService transform, PersistService persist) {
         this.validation = validation;
         this.transform = transform;
+        this.persist = persist;
     }
 
-    @PostMapping(
-            consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
+    @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE },
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StandardTelemetry> ingest(@Valid @RequestBody RawTelemetry raw) {
-        // Bean validation runs because of @Valid; business checks next:
         validation.validate(raw);
-
-        // Normalize to the internal schema:
         StandardTelemetry std = transform.toStandard(raw);
-
-        // Later we’ll persist + publish; for now we return 202 with normalized body so you can verify.
+        persist.saveRawAndStandard(raw, std);  // <-- save to DB
         return ResponseEntity.accepted().body(std);
     }
 }
