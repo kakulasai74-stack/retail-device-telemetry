@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.emf.ingestion.service.PersistService;
+import com.emf.ingestion.pipeline.TelemetryPublisher;
 
 @RestController
 @RequestMapping("/api/v1/telemetry")
@@ -21,19 +22,22 @@ public class TelemetryController {
     private final PersistService persist;
     private final SchemaValidationService schemaValidationService;
     private final TelemetryMetrics telemetryMetrics;
+    private final TelemetryPublisher publisher;
 
     public TelemetryController(
             ValidationService validation,
             TransformService transform,
             PersistService persist,
             SchemaValidationService schemaValidationService,
-            TelemetryMetrics telemetryMetrics) {
+            TelemetryMetrics telemetryMetrics,
+            TelemetryPublisher publisher) {
 
         this.validation = validation;
         this.transform = transform;
         this.persist = persist;
         this.schemaValidationService = schemaValidationService;
         this.telemetryMetrics = telemetryMetrics;
+        this.publisher = publisher;
     }
 
     @PostMapping(
@@ -56,6 +60,7 @@ public class TelemetryController {
 
         StandardTelemetry std = transform.toStandard(raw);
         persist.saveRawAndStandard(raw, std);
+        publisher.publish(std);
         telemetryMetrics.increment();
         return ResponseEntity.accepted().body(std);
     }
