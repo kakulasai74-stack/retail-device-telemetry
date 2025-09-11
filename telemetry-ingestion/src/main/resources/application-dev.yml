@@ -12,6 +12,13 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    properties:
+      spring.json.add.type.headers: false
 
 management:
   endpoints:
@@ -40,3 +47,6 @@ otel:
     attributes:
       service.name: telemetry-ingestion
 
+telemetry:
+  kafka:
+    topic: emf.telemetry.ingested
