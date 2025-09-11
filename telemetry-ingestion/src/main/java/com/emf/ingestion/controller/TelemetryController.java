@@ -2,6 +2,7 @@ package com.emf.ingestion.controller;
 
 import com.emf.common.model.RawTelemetry;
 import com.emf.common.model.StandardTelemetry;
+import com.emf.ingestion.metrics.TelemetryMetrics;
 import com.emf.ingestion.service.TransformService;
 import com.emf.ingestion.service.ValidationService;
 import com.emf.ingestion.validation.SchemaValidationService;
@@ -19,12 +20,20 @@ public class TelemetryController {
     private final TransformService transform;
     private final PersistService persist;
     private final SchemaValidationService schemaValidationService;
+    private final TelemetryMetrics telemetryMetrics;
 
-    public TelemetryController(ValidationService validation, TransformService transform, PersistService persist,  SchemaValidationService schemaValidationService) {
+    public TelemetryController(
+            ValidationService validation,
+            TransformService transform,
+            PersistService persist,
+            SchemaValidationService schemaValidationService,
+            TelemetryMetrics telemetryMetrics) {
+
         this.validation = validation;
         this.transform = transform;
         this.persist = persist;
         this.schemaValidationService = schemaValidationService;
+        this.telemetryMetrics = telemetryMetrics;
     }
 
     @PostMapping(
@@ -45,10 +54,9 @@ public class TelemetryController {
             schemaValidationService.validateJson(raw);
         }
 
-        // transform + persist (already implemented)
         StandardTelemetry std = transform.toStandard(raw);
         persist.saveRawAndStandard(raw, std);
-
+        telemetryMetrics.increment();
         return ResponseEntity.accepted().body(std);
     }
 }
