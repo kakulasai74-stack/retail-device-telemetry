@@ -13,6 +13,30 @@ spring:
       enabled: true
       path: /h2-console
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      application: telemetry-ingestion
+
 logging:
   level:
-    org.hibernate.SQL: debug
+    root: INFO
+    com.emf.ingestion: DEBUG
+  pattern:
+    console: '{"time":"%d{yyyy-MM-dd HH:mm:ss}","level":"%p","logger":"%c{1}","message":"%m"}%n'
+
+otel:
+  exporter:
+    otlp:
+      endpoint: http://localhost:4317
+  resource:
+    attributes:
+      service.name: telemetry-ingestion
+
